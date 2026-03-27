@@ -16,7 +16,8 @@ scripts/
 ├── 02_seurat_preprocessing_integration.R
 ├── 03_qc_visualization_single_sample.R
 ├── 04_differential_expression_and_celltype_annotation.R
-└── 05_cluster_composition_and_optional_correlation.R
+├── 05_cluster_composition_and_optional_correlation.R
+└── 06_functional_enrichment_prep.R
 
 **Preprocessing Workflow**
 Step 1: BCL/CBCL to FASTQ
@@ -44,6 +45,9 @@ Performs differential expression analysis (global and cluster-level), identifies
 
 05_cluster_composition_and_optional_correlation.R
 Computes cluster/sample composition, per-cluster cell type proportions, dominant cluster annotations, and includes an optional exploratory framework for gene-gene correlation analysis.
+
+06_functional_enrichment_prep.R
+Filters differential expression result files into significantly upregulated and downregulated gene sets for downstream Gene Ontology enrichment analysis performed in WebGestalt.
 
 **Output Structure**
 results/
