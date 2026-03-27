@@ -102,9 +102,9 @@ for (x in sample_dirs) {
 sample_names <- names(seurat_list)
 
 merged_seurat <- merge(
-  x = seurat_list[[1]],
+  x = seurat_list[[1]], # explicitly mention all the elements one after another in the Seurat list
   y = seurat_list[-1],
-  add.cell.ids = sample_names
+  add.cell.ids = sample_names # Don’t leave placeholder sample names, replace with the real dataset labels.
 )
 
 # -----------------------------
