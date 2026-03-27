@@ -144,6 +144,7 @@ if ("FOXP3" %in% rownames(merged_seurat)) {
 # -----------------------------
 # QC metrics
 # -----------------------------
+# Search for the mito genes in the data: grep("^mt-",rownames(merged_seurat),value = T)
 merged_seurat[["percent.mt"]] <- PercentageFeatureSet(
   merged_seurat,
   pattern = "^MT-"
