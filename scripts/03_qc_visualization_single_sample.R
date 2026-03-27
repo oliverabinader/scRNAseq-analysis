@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 # -----------------------------
 # User inputs
 # -----------------------------
-input_rds <- "results/integration/integratedSeuratObject_SCTharmony.rds"
+input_rds <- "/path/to/analysis_folder/integration/integratedSeuratObject_SCTharmony.rds"
 output_dir <- "/path/to/analysis_folder/qc_single_sample"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
