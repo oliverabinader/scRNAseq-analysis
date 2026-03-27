@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 
+
 # =============================================================================
 # Author: Oliver Abinader
 # Description:
@@ -11,6 +12,7 @@
 #   - Cell type annotation using SingleR + celldex DICE reference as an example
 #   - UMAP export with SingleR labels
 # =============================================================================
+
 
 suppressPackageStartupMessages({
   library(Seurat)
