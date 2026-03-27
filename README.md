@@ -12,8 +12,8 @@ The workflow is modular and designed to be adaptable for future single-cell stud
 
 ## Repository Structure
 scripts/
-├── 01_bcl_to_fastq_to_feature_matrix.sh
-├── 02_seurat_preprocessing_integration.R
+- 01_bcl_to_fastq_to_feature_matrix.sh
+- 02_seurat_preprocessing_integration.R
 ├── 03_qc_visualization_single_sample.R
 ├── 04_differential_expression_and_celltype_annotation.R
 ├── 05_cluster_composition_and_optional_correlation.R
