@@ -5,8 +5,8 @@
 # Description:
 #   Downstream analysis on integrated Seurat object:
 #   - Differential expression FindMarkers (MS vs HC by cluster)
-#   - Global differential expression FindAllMarkers (MS vs HC)
-#   - Cluster marker detection (FindAllMarkers) ??
+#   - Global differential expression FindMarkers (MS vs HC, considering all clusters)
+#   - Cluster marker detection (FindAllMarkers)
 #   - Gene annotation (full gene names + summaries)
 #   - Cell type annotation using SingleR + celldex DICE reference as an example
 #   - UMAP export with SingleR labels
@@ -91,7 +91,7 @@ for (clust in clusters) {
 }
 
 # -----------------------------
-# Global DE: MS vs HC
+# Global DE: MS vs HC 
 # -----------------------------
 Idents(merged_seurat_filtered) <- "Disease_status"
 
