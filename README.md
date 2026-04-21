@@ -1,83 +1,183 @@
+# scRNAseq-analysis
+
 ## Author
 Oliver Abinader
 
-# scRNAseq-analysis
-- A reproducible 10x Genomics and Seurat-based single-cell RNA-seq (scRNA-seq) workflow spanning raw sequencing conversion through downstream analysis.
+---
+
+# Overview
+
+This repository contains a **reproducible single-cell RNA-seq (scRNA-seq) workflow** based on **10x Genomics data and Seurat**.
+
+The pipeline spans:
+
+- Raw sequencing processing (BCL/CBCL → FASTQ)
+- Cell Ranger processing to generate feature-barcode matrices
+- Quality control and preprocessing in Seurat
+- Downstream analysis including clustering, differential expression, annotation, and enrichment
+
+This workflow is designed for **cancer and tumor microenvironment studies**, but is modular and adaptable to other scRNA-seq applications.
 
 
-## Overview
-- This repository documents a reproducible single-cell RNA-seq preprocessing and downstream analysis workflow developed for cancer-focused research projects.
-- The pipeline supports analysis from raw 10x Genomics sequencing output through generation of sample-level filtered feature-barcode matrices, followed by downstream analysis in Seurat.
-- The workflow is modular and designed to be adaptable for future single-cell studies, including immune-focused and tumor microenvironment applications.
+# Repository Structure
 
-
-## Repository Structure
 scripts/
-- qc/check_filtered_matrix_md5.sh
-- 01_bcl_to_fastq_to_feature_matrix.sh
-- 02_seurat_preprocessing_integration.R
-- 03_qc_visualization_single_sample.R
-- 04_differential_expression_and_celltype_annotation.R
-- 05_cluster_composition_and_optional_correlation.R
-- 06_functional_enrichment_prep.R
+├── qc/
+│ └── check_filtered_matrix_md5.sh
+├── 01_bcl_to_fastq_to_feature_matrix.sh
+├── 02_seurat_preprocessing_integration.R
+├── 03_qc_visualization_single_sample.R
+├── 04_differential_expression_and_celltype_annotation.R
+├── 05_cluster_composition_and_optional_correlation.R
+└── 06_functional_enrichment_prep.R
 
 
-**Preprocessing Workflow**
-**Step 1:** BCL/CBCL to FASTQ
-- If the experiment begins with raw 10x Genomics sequencing output (BCL/CBCL), FASTQ files are generated using cellranger mkfastq.
+# Workflow Overview
 
-**Step 2:** Organize FASTQs by Sample
-- After FASTQ generation, FASTQ files for each biological sample should be separated into individual sample-specific directories.
+## Step 1 — BCL/CBCL → FASTQ
 
-**Step 3:** FASTQ to Filtered Feature-Barcode Matrix
-- Each sample is processed independently using cellranger count.
-- This step generates the filtered_feature_bc_matrix/ directory for each sample, which serves as the input for downstream Seurat-based single-cell analysis.
-- This pipeline includes a quality control step that generates MD5 checksums for key Cell Ranger output files.
+Raw 10x Genomics sequencing data is converted into FASTQ files using:
 
+- `cellranger mkfastq`
 
-**Scripts**
-- 01_bcl_to_fastq_to_feature_matrix.sh: Converts raw 10x Genomics BCL/CBCL output to FASTQ files and generates filtered feature-barcode matrices using Cell Ranger.
+## Step 2 — FASTQ organization
 
-- 02_seurat_preprocessing_integration.R: Loads Cell Ranger output into Seurat, performs quality control (QC), cell filtering, SCTransform normalization, Harmony-based integration, dimensionality reduction, clustering, and UMAP visualization.
+FASTQ files are separated into **sample-specific directories** to ensure independent processing.
 
-- 03_qc_visualization_single_sample.R: Generates publication-style QC violin plots for a single Seurat object or single sample to support its quality assessment.
+## Step 3 — FASTQ → Cell Ranger matrix
 
-- 04_differential_expression_and_celltype_annotation.R: Performs differential expression analysis (global and cluster-level), identifies marker genes, supports marker-based cluster interpretation, and assigns cell type labels using SingleR with the DICE immune reference.
+Each sample is processed using:
 
-- 05_cluster_composition_and_optional_correlation.R: Computes cluster/sample composition, per-cluster cell type proportions, dominant cluster annotations, and includes an optional exploratory framework for gene-gene correlation analysis.
+- `cellranger count`
 
-- 06_functional_enrichment_prep.R: Filters differential expression result files into significantly upregulated and downregulated gene sets for downstream Gene Ontology enrichment analysis performed in WebGestalt.
+This generates: filtered_feature_bc_matrix/ which serves as the input for downstream Seurat analysis.
 
 
-**Output Structure**
+# QC Step — MD5 checksum generation
+
+This pipeline includes a lightweight QC step that generates **MD5 checksums** for key Cell Ranger output files.
+
+**Script:**
+scripts/qc/check_filtered_matrix_md5.sh
+
+### Purpose
+Generates MD5 checksums for key Cell Ranger output files:
+- barcodes.tsv.gz  
+- features.tsv.gz  
+- matrix.mtx.gz  
+
+### Output
+md5sums_filtered_matrix.txt
+
+### Important note
+This step:
+- ✔ Generates integrity snapshots
+- ❌ Does NOT compare against reference values
+
+
+# Additional Scripts
+
+## 01 — BCL/CBCL processing
+**01_bcl_to_fastq_to_feature_matrix.sh**
+
+- Converts raw 10x Genomics BCL/CBCL data into FASTQ files
+- Runs Cell Ranger preprocessing
+- Generates filtered feature-barcode matrices
+
+
+## 02 — Seurat preprocessing & integration
+**02_seurat_preprocessing_integration.R**
+
+- Loads Cell Ranger outputs into Seurat
+- Performs QC filtering
+- SCTransform normalization
+- Harmony-based integration (`IntegrateLayers`)
+- PCA, clustering, and UMAP visualization
+
+
+## 03 — QC visualization
+**03_qc_visualization_single_sample.R**
+
+- Generates QC violin plots per sample
+- Evaluates:
+  - nCount_RNA
+  - nFeature_RNA
+  - mitochondrial content
+
+
+## 04 — Differential expression & annotation
+**04_differential_expression_and_celltype_annotation.R**
+
+- Differential expression analysis (cluster-level and global)
+- Marker gene identification
+- Cell type annotation using SingleR (DICE reference)
+
+
+## 05 — Cluster composition & correlation (optional)
+**05_cluster_composition_and_optional_correlation.R**
+
+- Cluster composition analysis across samples
+- Cell type proportion estimation
+- Dominant cluster identification
+- Optional gene-gene correlation analysis
+
+
+## 06 — Functional enrichment preparation
+**06_functional_enrichment_prep.R**
+
+- Splits DE results into:
+  - upregulated genes
+  - downregulated genes
+- Prepares input for Gene Ontology analysis (WebGestalt)
+
+
+# Output Structure
+
 results/
-├──integration/
-    ├──qc/
-├──de_and_annotation/
-    ├──de_results/
-    ├──celltype_annotation/
-├──exploratory/
-    ├──cluster_composition/
-    ├──gene_correlation/
+├── integration/
+├── qc/
+├── de_and_annotation/
+├── de_results/
+├── celltype_annotation/
+├── exploratory/
+├── cluster_composition/
+└── gene_correlation/
 
 
-**Requirements**
-- Cell Ranger
-- 10x Genomics-compatible reference transcriptome (e.g., refdata-gex-GRCh38-2020-A)
-- R (compatible with Seurat v5 workflow)
-- HPC or Linux environment with sufficient CPU and memory resources for Cell Ranger processing
+# Requirements
+
+- Cell Ranger (10x Genomics)
+- Reference transcriptome (e.g., GRCh38)
+- R (Seurat v5 compatible)
+- Harmony
+- Linux/HPC environment with sufficient compute resources
 
 
-**Project-Specific Notes**
-- This workflow is written for Seurat v5 and uses Harmony integration via IntegrateLayers().
-- Some filtering or feature-retention steps may be dataset-specific and should be reviewed before applying the workflow to other projects.
-- The exploratory gene-gene correlation module in Script 05 is optional and intended as a customizable downstream extension rather than a required core scRNA-seq step.
+# Project-Specific Notes
+
+## Seurat version
+- Built for Seurat v5
+- Uses `IntegrateLayers()` for Harmony integration
+
+  
+## FOXP3 filtering
+
+FOXP3_counts > 0
+This filtering is **specific to Treg-focused analysis** and should not be generalized.
 
 
-**Important Note on FOXP3 Filtering**
-- In the current project, the use of: FOXP3_counts > 0 is biologically motivated because the analysis is Treg-focused. However, this should be treated as a project-specific filtering criterion rather than a universal preprocessing rule.
+## Cell Ranger settings
+Check whether `--include-introns` is enabled depending on version and experiment design.
 
 
-**Additional Notes**
-- For future projects, confirm whether --include-introns is enabled or defaulted in the Cell Ranger version being used.
-- Sample naming conventions should remain consistent across FASTQ directories, Cell Ranger outputs, and Seurat metadata to simplify downstream merging and annotation.
+## Metadata consistency
+Ensure consistent naming across:
+
+- FASTQ directories
+- Cell Ranger outputs
+- Seurat metadata
+
+
+# Summary
+
+This pipeline provides a **modular and reproducible framework for scRNA-seq analysis**, from raw sequencing data through biological interpretation and functional enrichment.
