@@ -22,14 +22,14 @@ This workflow is designed for **cancer and tumor microenvironment studies**, but
 # Repository Structure
 
 scripts/
-├── qc/
-│ └── check_filtered_matrix_md5.sh
-├── 01_bcl_to_fastq_to_feature_matrix.sh
-├── 02_seurat_preprocessing_integration.R
-├── 03_qc_visualization_single_sample.R
-├── 04_differential_expression_and_celltype_annotation.R
-├── 05_cluster_composition_and_optional_correlation.R
-└── 06_functional_enrichment_prep.R
+- qc/
+  - check_filtered_matrix_md5.sh
+  - 01_bcl_to_fastq_to_feature_matrix.sh
+  - 02_seurat_preprocessing_integration.R
+  - 03_qc_visualization_single_sample.R
+  - 04_differential_expression_and_celltype_annotation.R
+  - 05_cluster_composition_and_optional_correlation.R
+  - 06_functional_enrichment_prep.R
 
 
 # Workflow Overview
@@ -134,14 +134,14 @@ This step:
 # Output Structure
 
 results/
-├── integration/
-├── qc/
-├── de_and_annotation/
-├── de_results/
-├── celltype_annotation/
-├── exploratory/
-├── cluster_composition/
-└── gene_correlation/
+- integration/
+- qc/
+- de_and_annotation/
+- de_results/
+- celltype_annotation/
+- exploratory/
+- cluster_composition/
+- gene_correlation/
 
 
 # Requirements
